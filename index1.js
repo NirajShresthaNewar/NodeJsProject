@@ -27,9 +27,9 @@ console.log("connected to Database successfully");
     console.log(err);
 });
 const db ={};
+db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-db.sequelize = sequelize;
-
+db.blogs = require("../model/blog.js")(sequelize, Sequelize);
 
 module.exports=db;
 
