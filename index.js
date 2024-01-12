@@ -1,22 +1,51 @@
-const express = require("express");
-const {newFunc}= require("./evenNumbers");
-const {testfunction}= require("./testController");
-const app = express();
-const db=require("./model/index")
-// const { newFunc } = require("./controllers/even");
+const Sequelize =require("sequelize");
+const dbConfig =require("../dbConfig/dbConfig.js");
 
-app.get("/", (req, res) => {
-  res.json({
-    message: "hello world from / route",
-  });
-});
-db.sequelize.sync({force:false})
-app.use("/about", newFunc);
-app.get("/test", testfunction);
-
-// app.get("/even", newFunc);
-let PORT = 5000;
-
-app.listen(PORT, () => {
-  console.log(`project started at port ${PORT}`)}
+const sequelize = new Sequelize(
+    
+    dbConfig.db,
+    dbConfig.username,
+    dbConfig.password,
+    {
+        host:dbConfig.host,
+        dialect: dbConfig.dialect,
+        pool:{
+            max:dbConfig.pool.max,
+            min:dbConfig.pool.min,
+            accurate:dbConfig.pool.accurate,
+            idle:dbConfig.pool.idle,
+        },
+    },
 );
+
+sequelize 
+.authenticate()
+.then(()=>{
+console.log("connected to Database successfully");
+})
+.catch((err)=>{
+    console.log(err);
+});
+const db ={};
+
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
+
+db.blogs = require("../model/blog.js")(sequelize, Sequelize);
+
+module.exports=db;
+
+
+
+
+
+/*
+try{
+    await sequelize.authenticate();
+    console.log('connection established');
+
+}
+catch (error) {
+    console.error('Unable to connect to the database:', error);
+  }
+*/
