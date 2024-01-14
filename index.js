@@ -40,6 +40,8 @@ db.sequelize = sequelize;
 
 // Import and initialize the Blog model using the sequelize instance
 db.blogs = require("../model/blog.js")(sequelize, Sequelize);
+db.auth =require("./../model/auth.js")(sequelize, Sequelize);
+
 
 // Export the db object for use in other modules
 module.exports = db;
